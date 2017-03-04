@@ -1,0 +1,23 @@
+{
+  "name": "todo-list-weekend-challenge",
+  "version": "1.0.0",
+  "description": "to-do list weekend challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/app.js"
+  },
+  "keywords": [
+    "productive",
+    "aweosme",
+    "to-do",
+    "checklist"
+  ],
+  "author": "Edmund Wippler",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.0",
+    "express": "^4.15.0",
+    "pg": "^6.1.2"
+  }
+}
