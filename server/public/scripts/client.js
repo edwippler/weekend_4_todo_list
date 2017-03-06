@@ -1,3 +1,5 @@
+var defaultCompletionStatus = false;
+
 $(document).ready(function(){
   console.log('Sorcery, hell yeah!');
 
@@ -6,15 +8,16 @@ $(document).ready(function(){
   $('#addButton').on('click', function(){
     var newTask = $('#newTask').val();
     var newTaskObject = {
-      added: newTask
+      task: newTask,
+      completion_status: defaultCompletionStatus
     };
-    console.log(newTask);
     $.ajax({
       type: 'POST',
-      url: '/new',
+      url: '/task/new',
       data: newTaskObject,
       success: function (response) {
         console.log(response);
+        appendTask(newTaskObject);
       }
     })
   }); //end of addtask function
@@ -32,10 +35,14 @@ function getTasks() {
     type: 'GET',
     url: '/task',
     success: function(response) {
-      console.log(response);
+      // console.log(response);
       for (var i = 0; i < response.length; i++) {
       $('#containAwesomeTasks').append('<tr><td>' + response[i].task + '</td><td><button data-status="' + response[i].completion_status + '"> &#10004;</button></td><td><button>&#10134;</button></td></tr>');
     }
     }
   });//end of ajax
 };//end of registure listener
+
+function appendTask(response){
+  $('#containAwesomeTasks').append('<tr><td>' + response.task + '</td><td><button data-status="' + response.completion_status + '"> &#10004;</button></td><td><button>&#10134;</button></td></tr>');
+}
