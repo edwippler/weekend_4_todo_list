@@ -76,7 +76,10 @@ function getTasks() {
     success: function(response) {
       // console.log(response);
       for (var i = 0; i < response.length; i++) {
-        $('#containAwesomeTasks').append('<tr data-id="' + response[i].id + '"><td>' + response[i].task + '</td><td><button data-status="' + response[i].completion_status + '" class="completedButton"> &#10004;</button></td><td><button class="deleteButton">&#10134;</button></td></tr>');
+        $('#containAwesomeTasks').append('<tr data-id="' + response[i].id + '"><td id="task'+ response[i].id + '">' + response[i].task + '</td><td><button data-status="' + response[i].completion_status + '" class="completedButton"> &#10004;</button></td><td><button class="deleteButton">&#10134;</button></td></tr>');
+        if (response[i].completion_status == true){
+          $('#task'+ response[i].id + '').addClass('complete'); 
+        }
       }
     }
   });//end of ajax
