@@ -54,4 +54,26 @@ router.post('/new', function(req, res){
   })
 });
 
+router.put('/done', function(req, res){
+  var newTask = req.body;
+  // This will be replaced with a SELECT statement to SQL
+  pool.connect(function(errorConnectingToDatabase, client, done){
+    if(errorConnectingToDatabase) {
+      // There was an error connecting to the database
+      console.log('Error connecting to database: ', errorConnectingToDatabase);
+      res.sendStatus(500);
+    } else {
+      client.query('UPDATE tasks SET completion_status = $1 WHERE task = $2;', [newTask.completion_status, newTask.task], function(errorMakingQuery, result){
+        done();
+        if(errorMakingQuery) {
+          console.log('Error making the database query: ', errorMakingQuery);
+          res.sendStatus(500);
+        } else {
+          res.sendStatus(202);
+        }
+      }); // end client.query
+    }
+  })
+});
+
 module.exports = router;
