@@ -16,7 +16,6 @@ $(document).ready(function(){
       url: '/task/new',
       data: newTaskObject,
       success: function (response) {
-        // console.log(response);
         appendTask(newTaskObject);
       }
     }) //end get ajax
@@ -25,9 +24,6 @@ $(document).ready(function(){
   $('#containAwesomeTasks').on('click', '.completedButton', function(){
     var selectedTask = $(this).parent().prev().text();
     var selectedStatus = $(this).data('status');
-
-    // console.log(selectedStatus);
-    // console.log(selectedTask,' completed button targeted'); //log to make sure the correct item is targeted.
 
     //conditional to change completion_status from defaul to TRUE. Need more time to create toggle ability.
     if (selectedStatus == false) {
@@ -42,19 +38,28 @@ $(document).ready(function(){
       url: '/task/done',
       data: statusObject,
       success: function(response){
-        // console.log(response);
       }
     })//;end put ajax
   }); //end of completed task listener
 
   $('#containAwesomeTasks').on('click', '.deleteButton', function(){
     var selectedTask = $(this).parent().prev().prev().text();
-    console.log(selectedTask, ' delete button targeted');
+    var selectedRowID = $(this).parent().parent().data('id');
+    var selectedObject = {
+      id: selectedRowID,
+      task: selectedTask
+    }
+    console.log(selectedObject, ' delete button targeted');
 
+    $.ajax({
+      type: 'DELETE',
+      url: '/task/delete/',
+      data: selectedObject,
+      success: function(response){
+      getTasks();
+      }
+    });
   }); //end of delete task listener
-
-
-
 
 
 }); //end of document ready
@@ -62,18 +67,19 @@ $(document).ready(function(){
 
 
 function getTasks() {
+  $('#containAwesomeTasks').empty(); 
   $.ajax({
     type: 'GET',
     url: '/task',
     success: function(response) {
       // console.log(response);
       for (var i = 0; i < response.length; i++) {
-        $('#containAwesomeTasks').append('<tr><td>' + response[i].task + '</td><td><button data-status="' + response[i].completion_status + '" class="completedButton"> &#10004;</button></td><td><button class="deleteButton">&#10134;</button></td></tr>');
+        $('#containAwesomeTasks').append('<tr data-id="' + response[i].id + '"><td>' + response[i].task + '</td><td><button data-status="' + response[i].completion_status + '" class="completedButton"> &#10004;</button></td><td><button class="deleteButton">&#10134;</button></td></tr>');
       }
     }
   });//end of ajax
 };//end of initial get function
 
 function appendTask(response){
-  $('#containAwesomeTasks').append('<tr><td id="'+ response.id + '">' + response.task + '</td><td><button data-status="' + response.completion_status + '" class="completedButton"> &#10004;</button></td><td><button class="deleteButton">&#10134;</button></td></tr>');
+  $('#containAwesomeTasks').append('<tr><td>' + response.task + '</td><td><button data-status="' + response.completion_status + '" class="completedButton"> &#10004;</button></td><td><button class="deleteButton">&#10134;</button></td></tr>');
 }//end of appending function

@@ -19,7 +19,7 @@ router.get('/', function(req, res){
       console.log('Error connecting to database: ', errorConnectingToDatabase);
       res.sendStatus(500);
     } else {
-      client.query('SELECT * FROM tasks', function(errorMakingQuery, result){
+      client.query('SELECT * FROM tasks ORDER BY id', function(errorMakingQuery, result){
         done();
         if(errorMakingQuery) {
           console.log('Error making the database query: ', errorMakingQuery);
@@ -64,6 +64,29 @@ router.put('/done', function(req, res){
       res.sendStatus(500);
     } else {
       client.query('UPDATE tasks SET completion_status = $1 WHERE task = $2;', [newTask.completion_status, newTask.task], function(errorMakingQuery, result){
+        done();
+        if(errorMakingQuery) {
+          console.log('Error making the database query: ', errorMakingQuery);
+          res.sendStatus(500);
+        } else {
+          res.sendStatus(202);
+        }
+      }); // end client.query
+    }
+  })
+});
+
+router.delete('/delete/', function(req, res){
+    var deleteTask = req.body;
+
+  // This will be replaced with a SELECT statement to SQL
+  pool.connect(function(errorConnectingToDatabase, client, done){
+    if(errorConnectingToDatabase) {
+      // There was an error connecting to the database
+      console.log('Error connecting to database: ', errorConnectingToDatabase);
+      res.sendStatus(500);
+    } else {
+      client.query('DELETE FROM tasks WHERE id = $1 OR task = $2;', [deleteTask.id, deleteTask.task], function(errorMakingQuery, result){
         done();
         if(errorMakingQuery) {
           console.log('Error making the database query: ', errorMakingQuery);
