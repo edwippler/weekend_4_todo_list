@@ -22,22 +22,24 @@ $(document).ready(function(){
   }); //end of addtask listener
 
   $('#containAwesomeTasks').on('click', '.completedButton', function(){
-    var selectedTask = $(this).parent().prev().text();
-    var selectedStatus = $(this).data('status');
+    var $selectedTask = $(this).parent().prev().text();
+    var $selectedStatus = $(this).data('status');
+    var $taskCell = $(this).parent().prev();
 
     //conditional to change completion_status from defaul to TRUE. Need more time to create toggle ability.
-    if (selectedStatus == false) {
-      selectedStatus = true;
+    if ($selectedStatus == false) {
+      $selectedStatus = true;
     }
     var statusObject = {
-      task: selectedTask,
-      completion_status: selectedStatus
+      task: $selectedTask,
+      completion_status: $selectedStatus
     }
     $.ajax({
       type: 'PUT',
       url: '/task/done',
       data: statusObject,
       success: function(response){
+        $taskCell.addClass('complete');
       }
     })//;end put ajax
   }); //end of completed task listener
@@ -49,7 +51,7 @@ $(document).ready(function(){
       id: selectedRowID,
       task: selectedTask
     }
-    console.log(selectedObject, ' delete button targeted');
+    // console.log(selectedObject, ' delete button targeted');
 
     $.ajax({
       type: 'DELETE',
@@ -67,7 +69,7 @@ $(document).ready(function(){
 
 
 function getTasks() {
-  $('#containAwesomeTasks').empty(); 
+  $('#containAwesomeTasks').empty();
   $.ajax({
     type: 'GET',
     url: '/task',
